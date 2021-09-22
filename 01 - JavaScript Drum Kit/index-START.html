@@ -58,7 +58,29 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  const playSound = (e) => {
+    // Search for audio element w/ specified data key
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if(!audio) return; // If no element with specified key, end fn
+    audio.currentTime = 0; // rewind to start, let's audio play again before ending
+    audio.play();
+    key.classList.add('playing'); // key.addClass('playing') - jQuery
+  }
 
+  function removeTransition (e) {
+    if(e.propertyName !== 'transform') {
+      return; // skip if not transform, other transitions dont apply below fn
+    }
+    this.classList.remove('playing');
+  }
+
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => {
+    key.addEventListener('transitionend', removeTransition)
+  });
+
+  window.addEventListener('keydown', playSound);
 </script>
 
 
