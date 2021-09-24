@@ -62,13 +62,47 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0, 2.15, 1, 1);
     }
 
   </style>
 
   <script>
+    // DOM Selectors
+    const secondHand = document.querySelector('.second-hand')
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
 
+    // # Rotation Tracker
+    let rotationSeconds = 0;
+    let rotationMinutes = 0;
+    let rotationHours = 0;
 
+    function setDate() {
+      const now = new Date();
+      
+      const seconds = now.getSeconds();
+      const secondsDegrees = ((seconds / 60) * 360) + 90 + (rotationSeconds * 360); // +90 offsets initial transform
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+      const minutes = now.getMinutes();
+      const minutesDegrees = ((minutes / 60) * 360) + 90 + (rotationMinutes * 360);
+      minHand.style.transform = `rotate(${minutesDegrees}deg)`;
+
+      const hours = now.getHours();
+      const hourDegrees = ((hours / 12) * 360) + 90 + (rotationHours * 360);
+      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+
+      // Prevents "wind back" on next rotation by incrementing and multiplying by 360
+      seconds === 59 ? rotationSeconds++ : '';
+      minutes === 59 ? rotationMinutes++ : '';
+      hours === 11 ? rotationHours++ : '';
+    }
+
+    setInterval(setDate, 1000);
   </script>
 </body>
 </html>
